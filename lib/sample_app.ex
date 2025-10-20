@@ -35,6 +35,7 @@ defmodule SampleApp do
   def ui_mod do
     case lcd_type() do
       "a" -> SampleApp.LcdA.UI
+      "b" -> SampleApp.LcdB.UI
       _ -> SampleApp.LcdA.UI
     end
   end
@@ -42,6 +43,7 @@ defmodule SampleApp do
   def touch_mod do
     case lcd_type() do
       "a" -> SampleApp.LcdA.XPT2046
+      "b" -> SampleApp.LcdB.XPT2046
       _ -> SampleApp.LcdA.XPT2046
     end
   end
