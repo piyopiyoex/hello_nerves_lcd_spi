@@ -37,6 +37,7 @@ defmodule SampleApp do
       "a" -> SampleApp.LcdA.UI
       "b" -> SampleApp.LcdB.UI
       "c" -> SampleApp.LcdC.UI
+      "f" -> SampleApp.LcdF.UI
       "g" -> SampleApp.LcdG.UI
       _ -> SampleApp.LcdA.UI
     end
@@ -47,6 +48,7 @@ defmodule SampleApp do
       "a" -> SampleApp.LcdA.XPT2046
       "b" -> SampleApp.LcdB.XPT2046
       "c" -> SampleApp.LcdC.XPT2046
+      "f" -> SampleApp.LcdF.GT911
       "g" -> SampleApp.LcdG.XPT2046
       _ -> SampleApp.LcdA.XPT2046
     end

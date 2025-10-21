@@ -1,4 +1,4 @@
-defmodule SampleApp.LcdG.UI do
+defmodule SampleApp.LcdF.UI do
   use GenServer
   require Logger
 
