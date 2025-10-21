@@ -64,4 +64,26 @@ defmodule SampleApp.Framebuffer do
         end)
     end
   end
+
+  def draw_sprite(buffer, x, y, %{w: w, h: h, pixels: pixels}) do
+    Enum.reduce(0..(h - 1), buffer, fn dy, acc_buf ->
+      row_start = dy * w * 2
+      row_bin = binary_part(pixels, row_start, w * 2)
+      index = ((y + dy) * @width + x) * 2
+
+      before = binary_part(acc_buf, 0, index)
+      rest = binary_part(acc_buf, index + w * 2, byte_size(acc_buf) - index - w * 2)
+
+      before <> row_bin <> rest
+    end)
+  end
+
+  def draw_sprite_with_background(buffer, x, y, sprite, bg_r, bg_g, bg_b) do
+    %{w: w, h: h} = sprite
+
+    buffer =
+      draw_filled_rect(buffer, x, y, w, h, bg_r, bg_g, bg_b)
+
+    draw_sprite(buffer, x, y, sprite)
+  end
 end

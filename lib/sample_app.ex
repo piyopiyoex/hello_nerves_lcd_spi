@@ -36,6 +36,7 @@ defmodule SampleApp do
     case lcd_type() do
       "a" -> SampleApp.LcdA.UI
       "b" -> SampleApp.LcdB.UI
+      "c" -> SampleApp.LcdC.UI
       _ -> SampleApp.LcdA.UI
     end
   end
@@ -44,6 +45,7 @@ defmodule SampleApp do
     case lcd_type() do
       "a" -> SampleApp.LcdA.XPT2046
       "b" -> SampleApp.LcdB.XPT2046
+      "c" -> SampleApp.LcdC.XPT2046
       _ -> SampleApp.LcdA.XPT2046
     end
   end
