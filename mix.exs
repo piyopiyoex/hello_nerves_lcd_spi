@@ -49,6 +49,7 @@ defmodule SampleApp.MixProject do
       {:toolshed, "~> 0.4.0"},
       {:circuits_gpio, "~> 2.0"},
       {:circuits_spi, "~> 2.0"},
+      {:ili9486_elixir, "~> 0.1.4"},
 
       # Allow Nerves.Runtime on host to support development, testing and CI.
       # See config/host.exs for usage.
