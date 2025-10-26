@@ -60,14 +60,14 @@ Reference pages:
 
 From the code defaults:
 
-**LCD (for A/B/C)(SPI over `spidev0.0`):**
+**LCD ili9486(for A/B/C)(SPI over `spidev0.0`):**
 
 - SPI: `spidev0.0`
 - `DC`: GPIO 24
 - `RST`: GPIO 25
 - `BL` (backlight enable): GPIO 18
 
-**LCD (for F/G)(SPI over `spidev0.0`):**
+**LCD ST7796S(for F/G)(SPI over `spidev0.0`):**
 
 - SPI: `spidev0.0`
 - `DC`: GPIO 22
