@@ -60,11 +60,18 @@ Reference pages:
 
 From the code defaults:
 
-**LCD (SPI over `spidev0.0`):**
+**LCD (for A/B/C)(SPI over `spidev0.0`):**
 
 - SPI: `spidev0.0`
 - `DC`: GPIO 24
 - `RST`: GPIO 25
+- `BL` (backlight enable): GPIO 18
+
+**LCD (for F/G)(SPI over `spidev0.0`):**
+
+- SPI: `spidev0.0`
+- `DC`: GPIO 22
+- `RST`: GPIO 27
 - `BL` (backlight enable): GPIO 18
 
 **Touch XPT2046 (for A/B/C/G):**
