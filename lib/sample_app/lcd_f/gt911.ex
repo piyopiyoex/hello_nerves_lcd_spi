@@ -82,8 +82,8 @@ defmodule SampleApp.LcdF.GT911 do
 
             Logger.info("Touch #{i}: ID=#{tid} X=#{x} Y=#{y}")
 
-            # ⭐ MyUI にメッセージ送信
-            send(MyUI, {:touch, x, y})
+            # ⭐ UI にメッセージ送信
+            send(SampleApp.LcdF.UI, {:touch, x, y})
           end
         end
 
