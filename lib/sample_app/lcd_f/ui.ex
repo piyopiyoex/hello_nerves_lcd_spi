@@ -20,10 +20,11 @@ defmodule SampleApp.LcdF.UI do
 
     gpio = 18
     frequency = 800
-    Pigpiox.Pwm.hardware_pwm(gpio, frequency, 1_000_000) # 100%
-#    Pigpiox.Pwm.hardware_pwm(gpio, frequency, 500_000)   # 50%
-#    Pigpiox.Pwm.hardware_pwm(gpio, frequency, 100_000)   # 10%
-#    Pigpiox.Pwm.hardware_pwm(gpio, frequency, 10_000)    # 1%
+    # 100%
+    Pigpiox.Pwm.hardware_pwm(gpio, frequency, 1_000_000)
+    #    Pigpiox.Pwm.hardware_pwm(gpio, frequency, 500_000)   # 50%
+    #    Pigpiox.Pwm.hardware_pwm(gpio, frequency, 100_000)   # 10%
+    #    Pigpiox.Pwm.hardware_pwm(gpio, frequency, 10_000)    # 1%
 
     # 背景描画
     LCD.fill_rect(spi_lcd, dc, 0, 0, 320, 480, 0xF800)
