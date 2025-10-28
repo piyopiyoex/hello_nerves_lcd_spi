@@ -14,8 +14,8 @@ export MIX_TARGET=rpi3      # or rpi4, etc.
 export LCD_TYPE=c           # a | b | c | f | g   (defaults to a)
 
 # Optional Wi-Fi
-export NERVES_NETWORK_SSID="your-ssid"
-export NERVES_NETWORK_PSK="your-psk"
+export NERVES_WIFI_SSID="your-ssid"
+export NERVES_WIFI_PASSPHRASE="your-psk"
 
 # Dependencies & firmware
 mix deps.get
