@@ -28,7 +28,7 @@ defmodule SampleApp do
     "lcd_#{lcd_type()} v#{app_version()} #{build_target()}"
   end
 
-  def piyopiypo_rgb565_path do
+  def piyopiyoex_rgb565_path do
     Application.app_dir(app_name(), "priv/piyopiyoex_320x480.rgb565")
   end
 

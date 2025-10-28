@@ -28,7 +28,7 @@ defmodule SampleApp.LcdA.UI do
 
     build_target = SampleApp.build_target()
     display_str = SampleApp.display_name()
-    rgb565_path = SampleApp.piyopiypo_rgb565_path()
+    rgb565_path = SampleApp.piyopiyoex_rgb565_path()
 
     buffer =
       if File.exists?(rgb565_path) do
