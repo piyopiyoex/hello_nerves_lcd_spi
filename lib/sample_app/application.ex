@@ -7,6 +7,8 @@ defmodule SampleApp.Application do
 
   @impl true
   def start(_type, _args) do
+    setup_wifi()
+
     children =
       [
         # Children for all targets
@@ -42,4 +44,19 @@ defmodule SampleApp.Application do
       ]
     end
   end
+
+  defp setup_wifi() do
+    kv = Nerves.Runtime.KV.get_all()
+
+    if true?(kv["wifi_force"]) or VintageNet.get_configuration("wlan0") == %{type: VintageNetWiFi} do
+      _ = VintageNetWiFi.quick_configure(kv["wifi_ssid"], kv["wifi_passphrase"])
+      :ok
+    end
+  end
+
+  defp true?(""), do: false
+  defp true?(nil), do: false
+  defp true?("false"), do: false
+  defp true?("FALSE"), do: false
+  defp true?(_), do: true
 end
