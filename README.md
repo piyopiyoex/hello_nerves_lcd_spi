@@ -101,7 +101,7 @@ Key environment variables:
 
 - `MIX_TARGET` – Nerves system target (e.g., `rpi3`)
 - `LCD_TYPE` – one of `a|b|c|f|g` (default `a`)
-- `NERVES_NETWORK_SSID`, `NERVES_NETWORK_PSK` – Wi-Fi credentials
+- `NERVES_WIFI_SSID`, `NERVES_WIFI_PASSPHRASE` – Wi-Fi credentials
 
 Other notable config:
 
