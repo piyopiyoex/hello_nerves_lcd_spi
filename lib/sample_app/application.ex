@@ -45,18 +45,39 @@ defmodule SampleApp.Application do
     end
   end
 
-  defp setup_wifi() do
-    kv = Nerves.Runtime.KV.get_all()
+  # Adopted from Nerves Livebook
+  # https://github.com/nerves-livebook/nerves_livebook/blob/b88b815d4d86eaf7a9ff136aa38b0766c80ed4e8/lib/nerves_livebook/application.ex
+  if Mix.target() == :host do
+    defp setup_wifi(), do: :ok
+  else
+    defp setup_wifi() do
+      kv = Nerves.Runtime.KV.get_all()
 
-    if true?(kv["wifi_force"]) or VintageNet.get_configuration("wlan0") == %{type: VintageNetWiFi} do
-      _ = VintageNetWiFi.quick_configure(kv["wifi_ssid"], kv["wifi_passphrase"])
-      :ok
+      if true?(kv["wifi_force"]) or not wlan0_configured?() do
+        ssid = kv["wifi_ssid"]
+        passphrase = kv["wifi_passphrase"]
+
+        unless empty?(ssid) do
+          _ = VintageNetWiFi.quick_configure(ssid, passphrase)
+          :ok
+        end
+      end
     end
-  end
 
-  defp true?(""), do: false
-  defp true?(nil), do: false
-  defp true?("false"), do: false
-  defp true?("FALSE"), do: false
-  defp true?(_), do: true
+    defp wlan0_configured?() do
+      VintageNet.get_configuration("wlan0") |> VintageNetWiFi.network_configured?()
+    catch
+      _, _ -> false
+    end
+
+    defp true?(""), do: false
+    defp true?(nil), do: false
+    defp true?("false"), do: false
+    defp true?("FALSE"), do: false
+    defp true?(_), do: true
+
+    defp empty?(""), do: true
+    defp empty?(nil), do: true
+    defp empty?(_), do: false
+  end
 end
