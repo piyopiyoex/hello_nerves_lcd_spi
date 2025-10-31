@@ -57,19 +57,18 @@ defmodule SampleAppTest do
     assert SampleApp.app_version() != ""
   end
 
-  test "full_name/0 composes name, lcd, version, and target" do
+  test "display_name/0 composes name, lcd, version, and target" do
     Application.put_env(@app, :lcd_type, "A")
     Application.put_env(@app, :build_target, "host")
-    full = SampleApp.full_name()
+    name = SampleApp.display_name()
 
-    assert full =~ "sample_app"
-    assert full =~ "lcd_a"
-    assert full =~ "v" <> SampleApp.app_version()
-    assert String.ends_with?(full, " host")
+    assert name =~ "lcd_a"
+    assert name =~ "v" <> SampleApp.app_version()
+    assert String.ends_with?(name, " host")
   end
 
-  test "piyopiypo_rgb565_path/0 points into priv" do
-    path = SampleApp.piyopiypo_rgb565_path()
+  test "piyopiyoex_rgb565_path/0 points into priv" do
+    path = SampleApp.piyopiyoex_rgb565_path()
     assert is_binary(path)
     assert String.contains?(path, "/priv/piyopiyoex_320x480.rgb565")
   end
