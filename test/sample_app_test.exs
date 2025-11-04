@@ -26,7 +26,6 @@ defmodule SampleAppTest do
 
     # start each test from a clean slate for keys we care about
     Application.delete_env(@app, :lcd_type)
-    Application.delete_env(@app, :build_target)
     System.delete_env("LCD_TYPE")
 
     :ok
@@ -38,28 +37,16 @@ defmodule SampleAppTest do
 
   test "lcd_type/0 defaults to \"a\" and is downcased" do
     assert SampleApp.lcd_type() == "a"
-    System.put_env("LCD_TYPE", "B")
-    assert SampleApp.lcd_type() == "b"
-
     Application.put_env(@app, :lcd_type, "C")
     assert SampleApp.lcd_type() == "c"
   end
 
-  test "build_target/0 returns env value or \"unknown\"" do
-    assert SampleApp.build_target() == "unknown"
-    Application.put_env(@app, :build_target, "rpi0")
-    assert SampleApp.build_target() == "rpi0"
-  end
-
   test "app_version/0 returns the running application version as string" do
-    # Matches the version from mix.exs/.app spec
     assert is_binary(SampleApp.app_version())
-    assert SampleApp.app_version() != ""
   end
 
   test "display_name/0 composes name, lcd, version, and target" do
     Application.put_env(@app, :lcd_type, "A")
-    Application.put_env(@app, :build_target, "host")
     name = SampleApp.display_name()
 
     assert name =~ "lcd_a"

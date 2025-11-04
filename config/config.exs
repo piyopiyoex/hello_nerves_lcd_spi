@@ -26,5 +26,4 @@ else
   import_config "target.exs"
 end
 
-config :sample_app, :build_target, Mix.target()
 config :sample_app, :lcd_type, System.get_env("LCD_TYPE", "a")

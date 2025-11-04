@@ -5,23 +5,20 @@ defmodule SampleApp do
 
   @default_lcd_type "a"
 
-  def app_name, do: :sample_app
+  def app_name, do: Application.get_application(__MODULE__)
 
   def lcd_type do
-    (get_kv("lcd_type") ||
-       Application.get_env(app_name(), :lcd_type) ||
-       System.get_env("LCD_TYPE") ||
-       @default_lcd_type)
+    Application.get_env(app_name(), :lcd_type, @default_lcd_type)
+    |> to_string()
     |> String.downcase()
   end
 
   def build_target do
-    Application.get_env(app_name(), :build_target, "unknown")
+    Nerves.Runtime.mix_target()
   end
 
   def app_version do
-    {:ok, version} = :application.get_key(app_name(), :vsn)
-    to_string(version)
+    Nerves.Runtime.KV.get_active("nerves_fw_version")
   end
 
   def display_name do
@@ -51,17 +48,6 @@ defmodule SampleApp do
       "f" -> SampleApp.LcdF.GT911
       "g" -> SampleApp.LcdG.XPT2046
       _ -> SampleApp.LcdA.XPT2046
-    end
-  end
-
-  defp get_kv(key) do
-    try do
-      case Nerves.Runtime.KV.get(key) do
-        "" -> nil
-        v -> v
-      end
-    catch
-      _, _ -> nil
     end
   end
 end
