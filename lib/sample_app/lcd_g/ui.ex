@@ -2,6 +2,7 @@ defmodule SampleApp.LcdG.UI do
   use GenServer
   require Logger
 
+  alias SampleApp.Backlight
   alias SampleApp.LcdG.ST7796S, as: LCD
   alias SampleApp.NetInfo
   alias SampleApp.TextDraw
@@ -20,11 +21,7 @@ defmodule SampleApp.LcdG.UI do
 
     gpio = 18
     frequency = 800
-    # 100%
-    Pigpiox.Pwm.hardware_pwm(gpio, frequency, 1_000_000)
-    #    Pigpiox.Pwm.hardware_pwm(gpio, frequency, 500_000)   # 50%
-    #    Pigpiox.Pwm.hardware_pwm(gpio, frequency, 100_000)   # 10%
-    #    Pigpiox.Pwm.hardware_pwm(gpio, frequency, 10_000)    # 1%
+    Backlight.set_pwm(gpio, frequency, 1_000_000)
 
     # 背景描画
     LCD.fill_rect(spi_lcd, dc, 0, 0, 320, 480, 0xF800)
@@ -88,8 +85,7 @@ defmodule SampleApp.LcdG.UI do
     end)
 
     # ssidを取得して表示
-    ssid_str = current_ssid()
-    sprite_ssid = LCD.build_sprite(ssid_str, 0x0000, 0xFFFF, 2)
+    sprite_ssid = LCD.build_sprite(NetInfo.get_ssid(), 0x0000, 0xFFFF, 2)
 
     LCD.push_sprite(spi_lcd, dc, 20, 440, %{
       w: sprite_ssid.w,
@@ -108,12 +104,5 @@ defmodule SampleApp.LcdG.UI do
     LCD.push_sprite(spi_lcd, dc, 150, 1, %{w: sprite.w, h: sprite.h, pixels: sprite.pixels})
 
     {:noreply, state}
-  end
-
-  defp current_ssid do
-    case VintageNet.get(["interface", "wlan0", "wifi", "current_ap"]) do
-      %_{ssid: ssid} -> ssid
-      _ -> "No SSID"
-    end
   end
 end
