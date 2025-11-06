@@ -111,8 +111,8 @@ defmodule SampleApp.LcdC.UI do
       end)
 
     # ssidを取得して表示
-    ssid_str = current_ssid()
-    sprite_ssid = LCD.build_sprite(ssid_str, 0x0000, 0xFFFF, 2)
+    sprite_ssid = LCD.build_sprite(NetInfo.get_ssid(), 0x0000, 0xFFFF, 2)
+
     x = 20
     y = 440
 
@@ -139,12 +139,5 @@ defmodule SampleApp.LcdC.UI do
     ILI9486.display_565(display, new_buffer)
 
     {:noreply, %{state | buffer: new_buffer}}
-  end
-
-  defp current_ssid do
-    case VintageNet.get(["interface", "wlan0", "wifi", "current_ap"]) do
-      %_{ssid: ssid} -> ssid
-      _ -> "No SSID"
-    end
   end
 end
