@@ -68,7 +68,7 @@ defmodule SampleApp.LcdC.UI do
 
     buffer = TextDraw.draw_text(buffer, 20, 330, display_str, 0, 0, 255, 2)
 
-    buffer = TextDraw.draw_text(buffer, 20, 80, "Target: #{build_target}", 0, 0, 255, 4)
+    buffer = TextDraw.draw_text(buffer, 5, 80, "Target: #{build_target}", 0, 0, 255, 4)
 
     # 色見本　赤、緑、青
     buffer = Framebuffer.draw_filled_rect(buffer, 0, 0, 25, 25, 255, 0, 0)
