@@ -40,7 +40,7 @@ defmodule SampleApp.LcdA.UI do
 
     buffer = TextDraw.draw_text(buffer, 20, 330, display_str, 0, 0, 255, 2)
 
-    buffer = TextDraw.draw_text(buffer, 20, 80, "Target: #{build_target}", 0, 0, 255, 4)
+    buffer = TextDraw.draw_text(buffer, 5, 80, "Target: #{build_target}", 0, 0, 255, 4)
 
     LCD.flush_to_lcd(spi_lcd, dc, buffer)
 
