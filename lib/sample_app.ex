@@ -3,14 +3,12 @@ defmodule SampleApp do
   Documentation for `SampleApp`.
   """
 
-  @default_lcd_type "a"
+  @default_lcd_type "A"
 
   def app_name, do: Application.get_application(__MODULE__)
 
   def lcd_type do
     Application.get_env(app_name(), :lcd_type, @default_lcd_type)
-    |> to_string()
-    |> String.downcase()
   end
 
   def build_target do
@@ -22,7 +20,7 @@ defmodule SampleApp do
   end
 
   def display_name do
-    "lcd_#{lcd_type()} v#{app_version()} #{build_target()}"
+    "LCD (#{lcd_type()}) #{build_target()} v#{app_version()}"
   end
 
   def piyopiyoex_rgb565_path do

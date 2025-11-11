@@ -39,8 +39,10 @@ defmodule SampleApp.Application do
         # Children for all targets except host
         # Starts a worker by calling: Target.Worker.start_link(arg)
         # {Target.Worker, arg},
+        Application.fetch_env!(:sample_app, :backlight_child),
         Application.fetch_env!(:sample_app, :ui_child)
       ]
+      |> Enum.reject(&is_nil/1)
     end
   end
 
