@@ -2,7 +2,7 @@ defmodule SampleApp.LcdC.XPT2046 do
   use GenServer
   import Bitwise
   require Logger
-  alias SampleApp.LcdB.UI
+  alias SampleApp.LcdC.UI
 
   # タッチ検出割込みピン（Lowでタッチ）
   @irq_pin 17

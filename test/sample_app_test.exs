@@ -62,7 +62,7 @@ defmodule SampleAppTest do
 
   test "ui_mod/0 and touch_mod/0 pick modules for lcd type" do
     Application.put_env(@app, :lcd_type, "A")
-    assert SampleApp.ui_mod() == SampleApp.LcdA.UI
-    assert SampleApp.touch_mod() == SampleApp.LcdA.XPT2046
+    assert SampleApp.ui_mod() == {SampleApp.LcdC.UI, [is_high_speed: false]}
+    assert SampleApp.touch_mod() == SampleApp.LcdC.XPT2046
   end
 end

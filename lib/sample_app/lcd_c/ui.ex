@@ -7,17 +7,20 @@ defmodule SampleApp.LcdC.UI do
   alias SampleApp.NetInfo
   alias SampleApp.TextDraw
 
-  def start_link(_args \\ []) do
-    GenServer.start_link(__MODULE__, %{}, name: __MODULE__)
+  def start_link(options \\ []) do
+    GenServer.start_link(__MODULE__, options, name: __MODULE__)
   end
 
   @impl true
-  def init(_) do
+  def init(options) do
     display_width = 320
     display_height = 480
 
+    is_high_speed = Keyword.get(options, :is_high_speed, true)
+    spi_speed_hz = if is_high_speed, do: 125_000_000, else: 10_000_000
+
     # LCD 初期化
-    {:ok, spi_lcd} = Circuits.SPI.open("spidev0.0", speed_hz: 125_000_000)
+    {:ok, spi_lcd} = Circuits.SPI.open("spidev0.0", speed_hz: spi_speed_hz)
     {:ok, bl} = Circuits.GPIO.open(18, :output)
     Circuits.GPIO.write(bl, 1)
 
@@ -27,7 +30,7 @@ defmodule SampleApp.LcdC.UI do
     # LCD 初期化
     {:ok, display} =
       ILI9486.new(
-        is_high_speed: true,
+        is_high_speed: is_high_speed,
         spi_lcd: spi_lcd,
         # spi_touch: spi_touch,
         gpio_dc: dc,
