@@ -1,9 +1,9 @@
-defmodule SampleApp.LcdC.UI do
+defmodule SampleApp.UI.ILI9486 do
   use GenServer
   require Logger
-  alias SampleApp.LcdC.LCD
   alias SampleApp.Color
   alias SampleApp.Framebuffer
+  alias SampleApp.LCD
   alias SampleApp.NetInfo
   alias SampleApp.TextDraw
 
@@ -16,7 +16,9 @@ defmodule SampleApp.LcdC.UI do
     display_width = 320
     display_height = 480
 
+    rotation = Keyword.get(options, :rotation, 0)
     is_high_speed = Keyword.get(options, :is_high_speed, true)
+
     spi_speed_hz = if is_high_speed, do: 125_000_000, else: 10_000_000
 
     # LCD 初期化
@@ -30,14 +32,14 @@ defmodule SampleApp.LcdC.UI do
     # LCD 初期化
     {:ok, display} =
       ILI9486.start_link(
-        is_high_speed: true,
+        is_high_speed: is_high_speed,
         spi_lcd: spi_lcd,
         # spi_touch: spi_touch,
         gpio_dc: dc,
         gpio_rst: rst,
         width: display_width,
         height: display_height,
-        rotation: 0,
+        rotation: rotation,
         pix_fmt: :rgb565
       )
 

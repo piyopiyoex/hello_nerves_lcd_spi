@@ -29,23 +29,22 @@ defmodule SampleApp do
     Application.app_dir(app_name(), "priv/piyopiyoex_320x480.rgb565")
   end
 
-  def ui_mod do
+  def ui_child_spec do
     case lcd_type() do
-      "b" -> SampleApp.LcdB.UI
-      "c" -> {SampleApp.LcdC.UI, [is_high_speed: true]}
-      "f" -> SampleApp.LcdF.UI
-      "g" -> SampleApp.LcdG.UI
-      _ -> {SampleApp.LcdC.UI, [is_high_speed: false]}
+      "b" -> {SampleApp.UI.ILI9486, is_high_speed: false, rotation: 180}
+      "c" -> {SampleApp.UI.ILI9486, is_high_speed: true, rotation: 0}
+      "f" -> {SampleApp.LcdF.UI, []}
+      "g" -> {SampleApp.LcdG.UI, []}
+      _ -> {SampleApp.UI.ILI9486, is_high_speed: false, rotation: 0}
     end
   end
 
-  def touch_mod do
+  def touch_child_spec do
+    {ui, _opts} = ui_child_spec()
+
     case lcd_type() do
-      "b" -> SampleApp.LcdB.XPT2046
-      "c" -> SampleApp.LcdC.XPT2046
-      "f" -> SampleApp.LcdF.GT911
-      "g" -> SampleApp.LcdG.XPT2046
-      _ -> SampleApp.LcdC.XPT2046
+      "f" -> {SampleApp.Touch.GT911, ui: ui}
+      _ -> {SampleApp.Touch.XPT2046, ui: ui}
     end
   end
 end

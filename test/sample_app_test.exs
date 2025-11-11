@@ -60,9 +60,12 @@ defmodule SampleAppTest do
     assert String.contains?(path, "/priv/piyopiyoex_320x480.rgb565")
   end
 
-  test "ui_mod/0 and touch_mod/0 pick modules for lcd type" do
+  test "ui_child_spec/0 and touch_child_spec/0 pick modules for lcd type" do
     Application.put_env(@app, :lcd_type, "A")
-    assert SampleApp.ui_mod() == {SampleApp.LcdC.UI, [is_high_speed: false]}
-    assert SampleApp.touch_mod() == SampleApp.LcdC.XPT2046
+
+    assert SampleApp.ui_child_spec() ==
+             {SampleApp.UI.ILI9486, [is_high_speed: false, rotation: 0]}
+
+    assert SampleApp.touch_child_spec() == {SampleApp.Touch.XPT2046, [ui: SampleApp.UI.ILI9486]}
   end
 end
