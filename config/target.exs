@@ -94,3 +94,86 @@ config :mdns_lite,
 # Uncomment to use target specific configurations
 
 # import_config "#{Mix.target()}.exs"
+
+lcd_type = System.get_env("LCD_TYPE", "a")
+
+touch_driver =
+  case lcd_type do
+    "f" ->
+      {SampleApp.Touch.GT911, i2c_bus: "i2c-1", int_pin: 4, rst_pin: 17}
+
+    _ ->
+      {SampleApp.Touch.XPT2046, spi_bus: "spidev0.1", irq_pin: 17}
+  end
+
+lcd_driver =
+  case lcd_type do
+    "a" ->
+      {LcdDisplay.ILI9486,
+       spi_bus: "spidev0.0",
+       data_command_pin: 24,
+       reset_pin: 25,
+       width: 320,
+       height: 480,
+       pixel_format: :rgb565,
+       rotation: 0,
+       data_bus: :parallel_16bit,
+       spi_speed_hz: 10_000_000}
+
+    "b" ->
+      {LcdDisplay.ILI9486,
+       spi_bus: "spidev0.0",
+       data_command_pin: 24,
+       reset_pin: 25,
+       width: 320,
+       height: 480,
+       pixel_format: :rgb565,
+       rotation: 180,
+       invert_colors: true,
+       data_bus: :parallel_16bit,
+       spi_speed_hz: 10_000_000}
+
+    "c" ->
+      {LcdDisplay.ILI9486,
+       spi_bus: "spidev0.0",
+       data_command_pin: 24,
+       reset_pin: 25,
+       width: 320,
+       height: 480,
+       pixel_format: :rgb565,
+       rotation: 0,
+       high_speed: true,
+       data_bus: :parallel_16bit,
+       spi_speed_hz: 125_000_000}
+
+    "f" ->
+      {LcdDisplay.ST7796,
+       spi_bus: "spidev0.0",
+       data_command_pin: 22,
+       reset_pin: 27,
+       width: 320,
+       height: 480,
+       pixel_format: :rgb565,
+       rotation: 0,
+       data_bus: :parallel_16bit,
+       spi_speed_hz: 60_000_000}
+
+    "g" ->
+      {LcdDisplay.ST7796,
+       spi_bus: "spidev0.0",
+       data_command_pin: 22,
+       reset_pin: 27,
+       width: 320,
+       height: 480,
+       pixel_format: :rgb565,
+       rotation: 180,
+       data_bus: :parallel_16bit,
+       spi_speed_hz: 60_000_000}
+
+    other ->
+      Mix.raise("Invalid LCD_TYPE=#{inspect(other)}.")
+  end
+
+ui_child = {SampleApp.UI.Demo, lcd_driver: lcd_driver, touch_driver: touch_driver}
+
+config :sample_app, lcd_type: lcd_type, ui_child: ui_child

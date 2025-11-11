@@ -25,5 +25,3 @@ if Mix.target() == :host do
 else
   import_config "target.exs"
 end
-
-config :sample_app, :lcd_type, System.get_env("LCD_TYPE", "a")
