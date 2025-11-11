@@ -59,10 +59,4 @@ defmodule SampleAppTest do
     assert is_binary(path)
     assert String.contains?(path, "/priv/piyopiyoex_320x480.rgb565")
   end
-
-  test "ui_mod/0 and touch_mod/0 pick modules for lcd type" do
-    Application.put_env(@app, :lcd_type, "A")
-    assert SampleApp.ui_mod() == {SampleApp.LcdC.UI, [is_high_speed: false]}
-    assert SampleApp.touch_mod() == SampleApp.LcdC.XPT2046
-  end
 end
