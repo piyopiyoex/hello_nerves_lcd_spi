@@ -6,7 +6,6 @@ defmodule SampleApp.Framebuffer do
   @height 480
 
   def new do
-    # RGB565で青 (0, 0, 255) → 00000 000000 11111 = 0x001F
     rgb565 = 0x0000
     pixel = <<rgb565 >>> 8 &&& 0xFF, rgb565 &&& 0xFF>>
 

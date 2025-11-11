@@ -94,3 +94,87 @@ config :mdns_lite,
 # Uncomment to use target specific configurations
 
 # import_config "#{Mix.target()}.exs"
+
+lcd_type = System.get_env("LCD_TYPE", "a")
+
+touch_driver =
+  case lcd_type do
+    "f" ->
+      {SampleApp.Touch.GT911, i2c_bus: "i2c-1", int_pin: 4, rst_pin: 17}
+
+    _ ->
+      {SampleApp.Touch.XPT2046, spi_bus: "spidev0.1", irq_pin: 17}
+  end
+
+lcd_driver =
+  case lcd_type do
+    "a" ->
+      {SampleApp.LCD.ILI9486,
+       port: 0,
+       lcd_cs: 0,
+       dc: 24,
+       rst: 25,
+       width: 320,
+       height: 480,
+       pix_fmt: :rgb565,
+       rotation: 0,
+       is_high_speed: false,
+       speed_hz: 10_000_000}
+
+    "b" ->
+      {SampleApp.LCD.ILI9486,
+       port: 0,
+       lcd_cs: 0,
+       dc: 24,
+       rst: 25,
+       width: 320,
+       height: 480,
+       pix_fmt: :rgb565,
+       rotation: 180,
+       is_high_speed: false,
+       speed_hz: 10_000_000}
+
+    "c" ->
+      {SampleApp.LCD.ILI9486,
+       port: 0,
+       lcd_cs: 0,
+       dc: 24,
+       rst: 25,
+       width: 320,
+       height: 480,
+       pix_fmt: :rgb565,
+       rotation: 0,
+       is_high_speed: true,
+       speed_hz: 125_000_000}
+
+    "f" ->
+      {SampleApp.LCD.ST7796,
+       port: 0,
+       lcd_cs: 0,
+       dc: 22,
+       rst: 27,
+       width: 320,
+       height: 480,
+       pix_fmt: :rgb565,
+       rotation: 0,
+       speed_hz: 60_000_000}
+
+    "g" ->
+      {SampleApp.LCD.ST7796,
+       port: 0,
+       lcd_cs: 0,
+       dc: 22,
+       rst: 27,
+       width: 320,
+       height: 480,
+       pix_fmt: :rgb565,
+       rotation: 180,
+       speed_hz: 60_000_000}
+
+    other ->
+      Mix.raise("Invalid LCD_TYPE=#{inspect(other)}.")
+  end
+
+ui_child = {SampleApp.UI.Demo, lcd_driver: lcd_driver, touch_driver: touch_driver}
+
+config :sample_app, lcd_type: lcd_type, ui_child: ui_child
