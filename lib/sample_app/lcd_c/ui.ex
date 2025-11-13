@@ -26,7 +26,7 @@ defmodule SampleApp.LcdC.UI do
 
     # LCD 初期化
     {:ok, display} =
-      ILI9486.new(
+      ILI9486.start_link(
         is_high_speed: true,
         spi_lcd: spi_lcd,
         # spi_touch: spi_touch,
