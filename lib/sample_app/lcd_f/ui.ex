@@ -20,7 +20,7 @@ defmodule SampleApp.LcdF.UI do
          {:ok, dc} <- Circuits.GPIO.open(22, :output),
          {:ok, rst} <- Circuits.GPIO.open(27, :output) do
       # バックライト ON
-      {:ok, _pid} = Backlight.start(18, 1.0)
+      {:ok, _pid} = Backlight.start_link(18, 1.0)
 
       # LCD初期化
       case LCD.init(spi_lcd, dc, rst) do
