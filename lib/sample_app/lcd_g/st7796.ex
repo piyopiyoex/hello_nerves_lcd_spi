@@ -132,6 +132,8 @@ defmodule SampleApp.LcdG.ST7796S do
     :timer.sleep(100)
 
     send_cmd(spi, dc, 0x29)
+    # ✅ 戻り値を明示する
+    :ok
   end
 
   def set_address_window(spi, dc, x0, y0, x1, y1) do

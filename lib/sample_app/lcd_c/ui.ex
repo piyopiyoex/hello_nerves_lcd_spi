@@ -29,8 +29,13 @@ defmodule SampleApp.LcdC.UI do
 
     # LCD 初期化
     {:ok, display} =
+<<<<<<< HEAD
       ILI9486.new(
         is_high_speed: is_high_speed,
+=======
+      ILI9486.start_link(
+        is_high_speed: true,
+>>>>>>> origin/main
         spi_lcd: spi_lcd,
         # spi_touch: spi_touch,
         gpio_dc: dc,
@@ -71,7 +76,7 @@ defmodule SampleApp.LcdC.UI do
 
     buffer = TextDraw.draw_text(buffer, 20, 330, display_str, 0, 0, 255, 2)
 
-    buffer = TextDraw.draw_text(buffer, 20, 80, "Target: #{build_target}", 0, 0, 255, 4)
+    buffer = TextDraw.draw_text(buffer, 5, 80, "Target: #{build_target}", 0, 0, 255, 4)
 
     # 色見本　赤、緑、青
     buffer = Framebuffer.draw_filled_rect(buffer, 0, 0, 25, 25, 255, 0, 0)

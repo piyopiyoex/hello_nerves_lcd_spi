@@ -1,8 +1,8 @@
-defmodule SampleApp.LcdB.UI do
+defmodule SampleApp.LcdA.UI do
   use GenServer
   require Logger
 
-  alias SampleApp.LcdB.ILI9486, as: LCD
+  alias SampleApp.LcdA.ILI9486, as: LCD
   alias SampleApp.TextDraw
   alias SampleApp.NetInfo
 
