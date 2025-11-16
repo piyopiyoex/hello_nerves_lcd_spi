@@ -94,3 +94,122 @@ config :mdns_lite,
 # Uncomment to use target specific configurations
 
 # import_config "#{Mix.target()}.exs"
+
+lcd_type = System.get_env("LCD_TYPE", "a")
+
+ui_child =
+  case lcd_type do
+    "a" ->
+      {SampleApp.UI.Demo,
+       [
+         driver: ILI9486,
+         driver_opts: [
+           port: 0,
+           lcd_cs: 0,
+           dc: 24,
+           rst: 25,
+           width: 320,
+           height: 480,
+           pix_fmt: :rgb565,
+           rotation: 0,
+           is_high_speed: false,
+           speed_hz: 10_000_000
+         ]
+       ]}
+
+    "b" ->
+      {SampleApp.UI.Demo,
+       [
+         driver: ILI9486,
+         driver_opts: [
+           port: 0,
+           lcd_cs: 0,
+           dc: 24,
+           rst: 25,
+           width: 320,
+           height: 480,
+           pix_fmt: :rgb565,
+           rotation: 180,
+           is_high_speed: false,
+           speed_hz: 10_000_000
+         ]
+       ]}
+
+    "c" ->
+      {SampleApp.UI.Demo,
+       [
+         driver: ILI9486,
+         driver_opts: [
+           port: 0,
+           lcd_cs: 0,
+           dc: 24,
+           rst: 25,
+           width: 320,
+           height: 480,
+           pix_fmt: :rgb565,
+           rotation: 0,
+           is_high_speed: true,
+           speed_hz: 125_000_000
+         ]
+       ]}
+
+    "f" ->
+      {SampleApp.UI.Demo,
+       [
+         driver: ST7796,
+         driver_opts: [
+           port: 0,
+           lcd_cs: 0,
+           dc: 22,
+           rst: 27,
+           width: 320,
+           height: 480,
+           pix_fmt: :rgb565,
+           rotation: 0,
+           speed_hz: 60_000_000
+         ]
+       ]}
+
+    "g" ->
+      {SampleApp.UI.Demo,
+       [
+         driver: ST7796,
+         driver_opts: [
+           port: 0,
+           lcd_cs: 0,
+           dc: 22,
+           rst: 27,
+           width: 320,
+           height: 480,
+           pix_fmt: :rgb565,
+           rotation: 0,
+           speed_hz: 60_000_000
+         ]
+       ]}
+
+    _ ->
+      {SampleApp.UI.Demo,
+       [
+         driver: ILI9486,
+         driver_opts: [
+           port: 0,
+           lcd_cs: 0,
+           dc: 24,
+           rst: 25,
+           width: 320,
+           height: 480,
+           pix_fmt: :rgb565,
+           rotation: 0,
+           is_high_speed: false,
+           speed_hz: 10_000_000
+         ]
+       ]}
+  end
+
+touch_child =
+  case lcd_type do
+    "f" -> {SampleApp.Touch.GT911, [ui: SampleApp.UI.Demo]}
+    _ -> {SampleApp.Touch.XPT2046, [ui: SampleApp.UI.Demo]}
+  end
+
+config :sample_app, lcd_type: lcd_type, ui_child: ui_child, touch_child: touch_child
