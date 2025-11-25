@@ -8,6 +8,7 @@ defmodule SampleApp.Backlight do
 
   use GenServer
   alias Circuits.GPIO
+  require Logger
 
   @default_pin 18
   @default_period_ms 4
@@ -32,7 +33,12 @@ defmodule SampleApp.Backlight do
   - `duty`: 明るさ（0.0〜1.0）
   - `period_ms`: PWM周期（ミリ秒、デフォルト4）
   """
-  def start_link(pin \\ @default_pin, duty \\ 0.5, period_ms \\ @default_period_ms) do
+
+  def start_link(opts) when is_list(opts) do
+    pin = Keyword.get(opts, :pin, @default_pin)
+    duty = Keyword.get(opts, :duty, 0.5)
+    period_ms = Keyword.get(opts, :period_ms, @default_period_ms)
+
     GenServer.start_link(__MODULE__, {pin, duty, period_ms}, name: __MODULE__)
   end
 
@@ -63,6 +69,10 @@ defmodule SampleApp.Backlight do
       period_ms: period_ms,
       running: true
     }
+
+    Logger.info(
+      "[Backlight] initialized successfully pin=#{pin} duty=#{duty} period_ms=#{period_ms}"
+    )
 
     # 最初のPWMサイクル開始
     Process.send_after(self(), :pwm_cycle, 0)

@@ -34,7 +34,7 @@ defmodule SampleApp.UI.Demo do
     run_color_test(driver_mod, driver_pid, width, height)
 
     buffer = build_initial_buffer(width, height)
-    driver_mod.display_565(driver_pid, buffer)
+    driver_mod.write_frame_565(driver_pid, buffer)
 
     :timer.send_interval(@tick_interval_ms, :tick)
 
@@ -77,7 +77,7 @@ defmodule SampleApp.UI.Demo do
       |> draw_net_info()
       |> draw_ssid()
 
-    driver_mod.display_565(driver_pid, buffer)
+    driver_mod.write_frame_565(driver_pid, buffer)
 
     new_lcd = %{lcd | buffer: buffer}
 
@@ -85,7 +85,7 @@ defmodule SampleApp.UI.Demo do
   end
 
   @impl true
-  def handle_info({:touch, x, y}, state) do
+  def handle_info({:lcd_display_touch, %{x: x, y: y}}, state) do
     {:noreply, apply_touch_to_buffer(state, x, y)}
   end
 
@@ -167,7 +167,7 @@ defmodule SampleApp.UI.Demo do
     buffer =
       Framebuffer.draw_sprite_with_background(buffer, 150, 1, sprite, 255, 255, 255)
 
-    driver_mod.display_565(driver_pid, buffer)
+    driver_mod.write_frame_565(driver_pid, buffer)
 
     new_lcd = %{lcd | buffer: buffer}
     %State{state | lcd: new_lcd}
@@ -187,7 +187,7 @@ defmodule SampleApp.UI.Demo do
       IO.puts("表示中: #{color_name}")
       pixel = SampleApp.Color.rgb565_binary(r, g, b)
       buffer = :binary.copy(pixel, width * height)
-      driver_mod.display_565(driver_pid, buffer)
+      driver_mod.write_frame_565(driver_pid, buffer)
       Process.sleep(500)
     end
   end

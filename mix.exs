@@ -50,7 +50,7 @@ defmodule SampleApp.MixProject do
       {:circuits_gpio, "~> 2.0"},
       {:circuits_spi, "~> 2.0"},
       {:circuits_i2c, "~> 2.0"},
-      {:ili9486_elixir, "~> 0.1.5"},
+      {:cvt_color, "~> 0.1.3"},
 
       # Allow Nerves.Runtime on host to support development, testing and CI.
       # See config/host.exs for usage.

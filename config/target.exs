@@ -95,86 +95,89 @@ config :mdns_lite,
 
 # import_config "#{Mix.target()}.exs"
 
-lcd_type = System.get_env("LCD_TYPE", "a")
-
-touch_driver =
-  case lcd_type do
-    "f" ->
-      {SampleApp.Touch.GT911, i2c_bus: "i2c-1", int_pin: 4, rst_pin: 17}
-
-    _ ->
-      {SampleApp.Touch.XPT2046, spi_bus: "spidev0.1", irq_pin: 17}
-  end
+lcd_type = System.get_env("LCD_TYPE", "A") |> String.upcase()
 
 lcd_driver =
   case lcd_type do
-    "a" ->
-      {SampleApp.LCD.ILI9486,
-       port: 0,
-       lcd_cs: 0,
-       dc: 24,
-       rst: 25,
+    "A" ->
+      {LcdDisplay.ILI9486,
+       spi_bus: "spidev0.0",
+       spi_speed_hz: 10_000_000,
+       data_command_pin: 24,
+       reset_pin: 25,
        width: 320,
        height: 480,
-       pix_fmt: :rgb565,
+       rotation: 0}
+
+    "B" ->
+      {LcdDisplay.ILI9486,
+       spi_bus: "spidev0.0",
+       spi_speed_hz: 10_000_000,
+       data_command_pin: 24,
+       reset_pin: 25,
+       width: 320,
+       height: 480,
        rotation: 0,
-       is_high_speed: false,
-       speed_hz: 10_000_000}
+       invert_colors: true}
 
-    "b" ->
-      {SampleApp.LCD.ILI9486,
-       port: 0,
-       lcd_cs: 0,
-       dc: 24,
-       rst: 25,
+    "C" ->
+      {LcdDisplay.ILI9486,
+       spi_bus: "spidev0.0",
+       spi_speed_hz: 125_000_000,
+       data_command_pin: 24,
+       reset_pin: 25,
        width: 320,
        height: 480,
-       pix_fmt: :rgb565,
-       rotation: 180,
-       is_high_speed: false,
-       speed_hz: 10_000_000}
-
-    "c" ->
-      {SampleApp.LCD.ILI9486,
-       port: 0,
-       lcd_cs: 0,
-       dc: 24,
-       rst: 25,
-       width: 320,
-       height: 480,
-       pix_fmt: :rgb565,
        rotation: 0,
-       is_high_speed: true,
-       speed_hz: 125_000_000}
+       data_bus: :parallel_16bit}
 
-    "f" ->
-      {SampleApp.LCD.ST7796,
-       port: 0,
-       lcd_cs: 0,
-       dc: 22,
-       rst: 27,
+    "F" ->
+      {LcdDisplay.ST7796,
+       spi_bus: "spidev0.0",
+       spi_speed_hz: 60_000_000,
+       data_command_pin: 22,
+       reset_pin: 27,
        width: 320,
        height: 480,
-       pix_fmt: :rgb565,
-       rotation: 0,
-       speed_hz: 60_000_000}
+       rotation: 0}
 
-    "g" ->
-      {SampleApp.LCD.ST7796,
-       port: 0,
-       lcd_cs: 0,
-       dc: 22,
-       rst: 27,
+    "G" ->
+      {LcdDisplay.ST7796,
+       spi_bus: "spidev0.0",
+       spi_speed_hz: 60_000_000,
+       data_command_pin: 22,
+       reset_pin: 27,
        width: 320,
        height: 480,
-       pix_fmt: :rgb565,
-       rotation: 180,
-       speed_hz: 60_000_000}
+       rotation: 0}
 
     other ->
       Mix.raise("Invalid LCD_TYPE=#{inspect(other)}.")
   end
 
-ui_child = {SampleApp.UI.Demo, lcd_driver: lcd_driver, touch_driver: touch_driver}
+touch_driver =
+  case lcd_type do
+    "F" ->
+      {LcdDisplay.GT911, i2c_bus: "i2c-1", interrupt_pin: 4, reset_pin: 17}
 
-config :sample_app, lcd_type: lcd_type, ui_child: ui_child
+    _ ->
+      {LcdDisplay.XPT2046,
+       spi_bus: "spidev0.1", interrupt_pin: 17, invert_x: true, invert_y: true}
+  end
+
+backlight_child =
+  case lcd_type do
+    "F" ->
+      {SampleApp.Backlight, [pin: 18, duty: 1.0, period_ms: 4]}
+
+    "G" ->
+      {SampleApp.Backlight, [pin: 18, duty: 1.0, period_ms: 4]}
+
+    _ ->
+      nil
+  end
+
+config :sample_app,
+  lcd_type: lcd_type,
+  backlight_child: backlight_child,
+  ui_child: {SampleApp.UI.Demo, lcd_driver: lcd_driver, touch_driver: touch_driver}

@@ -36,9 +36,9 @@ defmodule SampleAppTest do
   end
 
   test "lcd_type/0 defaults to \"a\" and is downcased" do
-    assert SampleApp.lcd_type() == "a"
+    assert SampleApp.lcd_type() == "A"
     Application.put_env(@app, :lcd_type, "C")
-    assert SampleApp.lcd_type() == "c"
+    assert SampleApp.lcd_type() == "C"
   end
 
   test "app_version/0 returns the running application version as string" do
@@ -48,10 +48,7 @@ defmodule SampleAppTest do
   test "display_name/0 composes name, lcd, version, and target" do
     Application.put_env(@app, :lcd_type, "A")
     name = SampleApp.display_name()
-
-    assert name =~ "lcd_a"
-    assert name =~ "v" <> SampleApp.app_version()
-    assert String.ends_with?(name, " host")
+    assert name =~ "LCD (A) host v0.0.0"
   end
 
   test "piyopiyoex_rgb565_path/0 points into priv" do
