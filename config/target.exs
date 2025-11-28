@@ -158,11 +158,30 @@ lcd_driver =
 touch_driver =
   case lcd_type do
     "F" ->
-      {LcdDisplay.GT911, i2c_bus: "i2c-1", interrupt_pin: 4, reset_pin: 17}
+      {LcdDisplay.GT911,
+       [
+         i2c_bus: "i2c-1",
+         interrupt_pin: 4,
+         reset_pin: 17
+       ]}
+
+    "G" ->
+      {LcdDisplay.XPT2046,
+       [
+         spi_bus: "spidev0.1",
+         interrupt_pin: 17,
+         invert_x: false,
+         invert_y: false
+       ]}
 
     _ ->
       {LcdDisplay.XPT2046,
-       spi_bus: "spidev0.1", interrupt_pin: 17, invert_x: true, invert_y: true}
+       [
+         spi_bus: "spidev0.1",
+         interrupt_pin: 17,
+         invert_x: true,
+         invert_y: true
+       ]}
   end
 
 backlight_child =
