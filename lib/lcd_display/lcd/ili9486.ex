@@ -3,8 +3,14 @@ defmodule LcdDisplay.ILI9486 do
 end
 
 defmodule LcdDisplay.ILI9486.DriverImpl do
-  import Bitwise
   require Logger
+  import Bitwise
+
+  import LcdDisplay.Utils,
+    only: [
+      open_spi_with_retry: 2,
+      maybe_open_gpio: 2
+    ]
 
   @behaviour LcdDisplay.DisplayDriver.DisplayContract
 
@@ -742,35 +748,5 @@ defmodule LcdDisplay.ILI9486.DriverImpl do
     image_data
     |> CvtColor.cvt(source_color, target_color)
     |> :binary.bin_to_list()
-  end
-
-  defp maybe_open_gpio(nil, _direction), do: nil
-
-  defp maybe_open_gpio(pin, direction) when is_integer(pin) and pin >= 0 do
-    {:ok, gpio} = Circuits.GPIO.open(pin, direction)
-    gpio
-  end
-
-  # SPI 初期化を 100ms 間隔で最大 20 回までリトライ
-  defp open_spi_with_retry(spi_bus, spi_speed_hz, attempts_left \\ 20)
-
-  defp open_spi_with_retry(spi_bus, spi_speed_hz, attempts_left) do
-    case Circuits.SPI.open(spi_bus, speed_hz: spi_speed_hz) do
-      {:ok, spi} ->
-        {:ok, spi}
-
-      {:error, reason} when attempts_left > 1 ->
-        Logger.warning(
-          "LCD SPI open failed on #{inspect(spi_bus)} (#{inspect(reason)}); " <>
-            "retrying in 100ms (#{attempts_left - 1} attempts left)"
-        )
-
-        Process.sleep(100)
-        open_spi_with_retry(spi_bus, spi_speed_hz, attempts_left - 1)
-
-      {:error, reason} ->
-        # 最後の 1 回も失敗したらそのままエラーを返す
-        {:error, reason}
-    end
   end
 end
