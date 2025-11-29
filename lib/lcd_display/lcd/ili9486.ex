@@ -3,7 +3,14 @@ defmodule LcdDisplay.ILI9486 do
 end
 
 defmodule LcdDisplay.ILI9486.DriverImpl do
+  require Logger
   import Bitwise
+
+  import LcdDisplay.Utils,
+    only: [
+      open_spi_with_retry: 2,
+      maybe_open_gpio: 2
+    ]
 
   @behaviour LcdDisplay.DisplayDriver.DisplayContract
 
@@ -144,37 +151,43 @@ defmodule LcdDisplay.ILI9486.DriverImpl do
     data_bus = opts[:data_bus] || :parallel_8bit
     invert_colors = opts[:invert_colors] || false
 
-    {:ok, lcd_spi} = Circuits.SPI.open(spi_bus, speed_hz: spi_speed_hz)
-    {:ok, gpio_data_command} = Circuits.GPIO.open(data_command_pin, :output)
-    gpio_reset = maybe_open_gpio(reset_pin, :output)
+    with {:ok, lcd_spi} <- open_spi_with_retry(spi_bus, spi_speed_hz),
+         {:ok, gpio_data_command} <- Circuits.GPIO.open(data_command_pin, :output) do
+      gpio_reset = maybe_open_gpio(reset_pin, :output)
+      chunk_size = calculate_chunk_size(lcd_spi, opts[:chunk_size], data_bus)
 
-    chunk_size = calculate_chunk_size(lcd_spi, opts[:chunk_size], data_bus)
+      display =
+        %__MODULE__{
+          lcd_spi: lcd_spi,
+          gpio_data_command: gpio_data_command,
+          gpio_reset: gpio_reset,
+          spi_bus: spi_bus,
+          spi_speed_hz: spi_speed_hz,
+          data_command_pin: data_command_pin,
+          reset_pin: reset_pin,
+          width: width,
+          height: height,
+          x_offset: x_offset,
+          y_offset: y_offset,
+          pixel_format: pixel_format,
+          rotation: rotation,
+          scan_direction: scan_direction,
+          data_bus: data_bus,
+          display_mode: display_mode,
+          frame_rate_hz: frame_rate_hz,
+          frame_divider: frame_divider,
+          frame_cycles: frame_cycles,
+          invert_colors: invert_colors,
+          chunk_size: chunk_size
+        }
+        |> reset()
+        |> init_sequence(data_bus)
 
-    %__MODULE__{
-      lcd_spi: lcd_spi,
-      gpio_data_command: gpio_data_command,
-      gpio_reset: gpio_reset,
-      spi_bus: spi_bus,
-      spi_speed_hz: spi_speed_hz,
-      data_command_pin: data_command_pin,
-      reset_pin: reset_pin,
-      width: width,
-      height: height,
-      x_offset: x_offset,
-      y_offset: y_offset,
-      pixel_format: pixel_format,
-      rotation: rotation,
-      scan_direction: scan_direction,
-      data_bus: data_bus,
-      display_mode: display_mode,
-      frame_rate_hz: frame_rate_hz,
-      frame_divider: frame_divider,
-      frame_cycles: frame_cycles,
-      invert_colors: invert_colors,
-      chunk_size: chunk_size
-    }
-    |> reset()
-    |> init_sequence(data_bus)
+      {:ok, display}
+    else
+      {:error, reason} ->
+        {:stop, reason}
+    end
   end
 
   @impl true
@@ -735,12 +748,5 @@ defmodule LcdDisplay.ILI9486.DriverImpl do
     image_data
     |> CvtColor.cvt(source_color, target_color)
     |> :binary.bin_to_list()
-  end
-
-  defp maybe_open_gpio(nil, _direction), do: nil
-
-  defp maybe_open_gpio(pin, direction) when is_integer(pin) and pin >= 0 do
-    {:ok, gpio} = Circuits.GPIO.open(pin, direction)
-    gpio
   end
 end
