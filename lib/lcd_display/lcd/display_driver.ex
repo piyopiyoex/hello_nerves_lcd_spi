@@ -27,8 +27,9 @@ defmodule LcdDisplay.DisplayDriver do
 end
 
 defmodule LcdDisplay.DisplayDriver.DisplayContract do
-  @callback init(Keyword.t()) :: struct()
+  @callback init(Keyword.t()) :: {:ok, term()} | {:stop, term()}
   @callback terminate(reason :: term(), struct()) :: any()
+
   @callback reset(struct()) :: struct()
   @callback size(struct()) :: %{width: non_neg_integer(), height: non_neg_integer()}
   @callback pixel_format(struct()) :: atom()
@@ -59,22 +60,38 @@ defmodule LcdDisplay.DisplayDriver.GenericServer do
   def init({driver_impl, opts}) do
     Process.flag(:trap_exit, true)
 
-    display_state = driver_impl.init(opts)
+    impl_opts = Keyword.delete(opts, :driver_impl)
 
-    Logger.info("[DisplayDriver] #{inspect(driver_impl)} initialized successfully")
+    try do
+      case driver_impl.init(impl_opts) do
+        {:ok, display_state} ->
+          Logger.info("[DisplayDriver] #{inspect(driver_impl)} initialized successfully")
 
-    {:ok, %{driver_impl: driver_impl, display_state: display_state}}
-  rescue
-    exception ->
-      Logger.error(fn ->
-        """
-        [DisplayDriver] #{inspect(driver_impl)} failed to initialize
-          exception: #{inspect(exception)}
-          opts: #{inspect(opts, pretty: true, limit: :infinity)}
-        """
-      end)
+          {:ok, %{driver_impl: driver_impl, display_state: display_state}}
 
-      {:stop, exception}
+        {:stop, reason} ->
+          Logger.error(fn ->
+            """
+            [DisplayDriver] #{inspect(driver_impl)} failed to initialize
+              reason: #{inspect(reason)}
+              opts: #{inspect(impl_opts, pretty: true, limit: :infinity)}
+            """
+          end)
+
+          {:stop, reason}
+      end
+    rescue
+      exception ->
+        Logger.error(fn ->
+          """
+          [DisplayDriver] #{inspect(driver_impl)} failed to initialize
+            exception: #{inspect(exception)}
+            opts: #{inspect(impl_opts, pretty: true, limit: :infinity)}
+          """
+        end)
+
+        {:stop, exception}
+    end
   end
 
   @impl true

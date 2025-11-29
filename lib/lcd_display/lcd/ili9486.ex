@@ -144,37 +144,102 @@ defmodule LcdDisplay.ILI9486.DriverImpl do
     data_bus = opts[:data_bus] || :parallel_8bit
     invert_colors = opts[:invert_colors] || false
 
-    {:ok, lcd_spi} = Circuits.SPI.open(spi_bus, speed_hz: spi_speed_hz)
-    {:ok, gpio_data_command} = Circuits.GPIO.open(data_command_pin, :output)
-    gpio_reset = maybe_open_gpio(reset_pin, :output)
+    with {:ok, lcd_spi} <- Circuits.SPI.open(spi_bus, speed_hz: spi_speed_hz),
+         {:ok, gpio_data_command} <- Circuits.GPIO.open(data_command_pin, :output) do
+      gpio_reset = maybe_open_gpio(reset_pin, :output)
+      chunk_size = calculate_chunk_size(lcd_spi, opts[:chunk_size], data_bus)
 
-    chunk_size = calculate_chunk_size(lcd_spi, opts[:chunk_size], data_bus)
+      display =
+        %__MODULE__{
+          lcd_spi: lcd_spi,
+          gpio_data_command: gpio_data_command,
+          gpio_reset: gpio_reset,
+          spi_bus: spi_bus,
+          spi_speed_hz: spi_speed_hz,
+          data_command_pin: data_command_pin,
+          reset_pin: reset_pin,
+          width: width,
+          height: height,
+          x_offset: x_offset,
+          y_offset: y_offset,
+          pixel_format: pixel_format,
+          rotation: rotation,
+          scan_direction: scan_direction,
+          data_bus: data_bus,
+          display_mode: display_mode,
+          frame_rate_hz: frame_rate_hz,
+          frame_divider: frame_divider,
+          frame_cycles: frame_cycles,
+          invert_colors: invert_colors,
+          chunk_size: chunk_size
+        }
+        |> reset()
+        |> init_sequence(data_bus)
 
-    %__MODULE__{
-      lcd_spi: lcd_spi,
-      gpio_data_command: gpio_data_command,
-      gpio_reset: gpio_reset,
-      spi_bus: spi_bus,
-      spi_speed_hz: spi_speed_hz,
-      data_command_pin: data_command_pin,
-      reset_pin: reset_pin,
-      width: width,
-      height: height,
-      x_offset: x_offset,
-      y_offset: y_offset,
-      pixel_format: pixel_format,
-      rotation: rotation,
-      scan_direction: scan_direction,
-      data_bus: data_bus,
-      display_mode: display_mode,
-      frame_rate_hz: frame_rate_hz,
-      frame_divider: frame_divider,
-      frame_cycles: frame_cycles,
-      invert_colors: invert_colors,
-      chunk_size: chunk_size
-    }
-    |> reset()
-    |> init_sequence(data_bus)
+      {:ok, display}
+    else
+      {:error, reason} ->
+        {:stop, reason}
+    end
+  end
+
+  @impl true
+  def init(opts) do
+    spi_bus = opts[:spi_bus] || "spidev0.0"
+    data_command_pin = Keyword.fetch!(opts, :data_command_pin)
+    spi_speed_hz = opts[:spi_speed_hz] || 16_000_000
+    width = opts[:width] || 480
+    height = opts[:height] || 320
+    x_offset = opts[:x_offset] || 0
+    y_offset = opts[:y_offset] || 0
+    reset_pin = opts[:reset_pin]
+    pixel_format = opts[:pixel_format] || :rgb565
+    rotation = opts[:rotation] || 90
+    scan_direction = opts[:scan_direction] || :right_down
+    display_mode = opts[:display_mode] || :normal
+    frame_rate_hz = opts[:frame_rate_hz] || 70
+    frame_divider = opts[:frame_divider] || 0b00
+    frame_cycles = opts[:frame_cycles] || 0b10001
+    data_bus = opts[:data_bus] || :parallel_8bit
+    invert_colors = opts[:invert_colors] || false
+
+    with {:ok, lcd_spi} <- Circuits.SPI.open(spi_bus, speed_hz: spi_speed_hz),
+         {:ok, gpio_data_command} <- Circuits.GPIO.open(data_command_pin, :output) do
+      gpio_reset = maybe_open_gpio(reset_pin, :output)
+      chunk_size = calculate_chunk_size(lcd_spi, opts[:chunk_size], data_bus)
+
+      display =
+        %__MODULE__{
+          lcd_spi: lcd_spi,
+          gpio_data_command: gpio_data_command,
+          gpio_reset: gpio_reset,
+          spi_bus: spi_bus,
+          spi_speed_hz: spi_speed_hz,
+          data_command_pin: data_command_pin,
+          reset_pin: reset_pin,
+          width: width,
+          height: height,
+          x_offset: x_offset,
+          y_offset: y_offset,
+          pixel_format: pixel_format,
+          rotation: rotation,
+          scan_direction: scan_direction,
+          data_bus: data_bus,
+          display_mode: display_mode,
+          frame_rate_hz: frame_rate_hz,
+          frame_divider: frame_divider,
+          frame_cycles: frame_cycles,
+          invert_colors: invert_colors,
+          chunk_size: chunk_size
+        }
+        |> reset()
+        |> init_sequence(data_bus)
+
+      {:ok, display}
+    else
+      {:error, reason} ->
+        {:stop, reason}
+    end
   end
 
   @impl true
