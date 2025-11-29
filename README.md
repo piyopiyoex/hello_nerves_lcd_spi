@@ -4,6 +4,8 @@ Tiny Nerves demo that drives 320×480 SPI LCDs (ILI9486 / ST7796S) and optional
 touch (XPT2046 / GT911) on Raspberry Pi–class targets. The app shows build
 info, time, basic network status, and a demo image/text buffer.
 
+![](https://github.com/user-attachments/assets/f4bea299-2ead-4bfc-ace6-26c3ce40b582)
+
 ## Getting Started
 
 ```bash
@@ -33,28 +35,15 @@ mix burn                    # SD card
 
 Set `LCD_TYPE` to select panel + touch wiring/modules:
 
-| LCD_TYPE | Panel                      | Controller |   Touch | Notes |
-| -------: | -------------------------- | ---------: | ------: | ----- |
-|      `a` | Waveshare 3.5" RPi LCD (A) |    ILI9486 | XPT2046 | TFT   |
-|      `b` | Waveshare 3.5" RPi LCD (B) |    ILI9486 | XPT2046 | IPS   |
-|      `c` | Waveshare 3.5" RPi LCD (C) |    ILI9486 | XPT2046 | TFT   |
-|      `f` | Waveshare 3.5" RPi LCD (F) |    ST7796S |   GT911 | IPS   |
-|      `g` | Waveshare 3.5" RPi LCD (G) |    ST7796S | XPT2046 | IPS   |
+| LCD_TYPE | Panel                                                                                | LCD controller | Touch controller | Panel type |
+| -------: | ------------------------------------------------------------------------------------ | -------------: | ---------------: | ---------- |
+|      `a` | [Waveshare 3.5" RPi LCD (A)](https://www.waveshare.com/wiki/3.5inch_RPi_LCD_%28A%29) |        ILI9486 |          XPT2046 | TFT        |
+|      `b` | [Waveshare 3.5" RPi LCD (B)](https://www.waveshare.com/wiki/3.5inch_RPi_LCD_%28B%29) |        ILI9486 |          XPT2046 | IPS        |
+|      `c` | [Waveshare 3.5" RPi LCD (C)](https://www.waveshare.com/wiki/3.5inch_RPi_LCD_%28C%29) |        ILI9486 |          XPT2046 | TFT        |
+|      `f` | [Waveshare 3.5" RPi LCD (F)](https://www.waveshare.com/wiki/3.5inch_RPi_LCD_%28F%29) |        ST7796S |             GT911| IPS        |
+|      `g` | [Waveshare 3.5" RPi LCD (G)](https://www.waveshare.com/wiki/3.5inch_RPi_LCD_%28G%29) |        ST7796S |          XPT2046 | IPS        |
 
-Reference pages:
-
-- [https://www.waveshare.com/wiki/3.5inch*RPi_LCD*(A)](https://www.waveshare.com/wiki/3.5inch_RPi_LCD_%28A%29)
-- [https://www.waveshare.com/wiki/3.5inch*RPi_LCD*(B)](https://www.waveshare.com/wiki/3.5inch_RPi_LCD_%28B%29)
-- [https://www.waveshare.com/wiki/3.5inch*RPi_LCD*(C)](https://www.waveshare.com/wiki/3.5inch_RPi_LCD_%28C%29)
-- [https://www.waveshare.com/wiki/3.5inch*RPi_LCD*(F)](https://www.waveshare.com/wiki/3.5inch_RPi_LCD_%28F%29)
-- [https://www.waveshare.com/wiki/3.5inch*RPi_LCD*(G)](https://www.waveshare.com/wiki/3.5inch_RPi_LCD_%28G%29)
-- MHS 3.5" (C-compatible): [https://www.lcdwiki.com/MHS-3.5inch_RPi_Display](https://www.lcdwiki.com/MHS-3.5inch_RPi_Display)
-
-## What It Shows
-
-- Build target, app version, and `lcd_<type>` label (`SampleApp.display_name/0`)
-- Time (updated ~500 ms), network status lines (using VintageNet)
-- Optional sprite text, simple color swatches, and an RGB565 demo image
+- [MHS 3.5"](https://www.lcdwiki.com/MHS-3.5inch_RPi_Display) is compatible with `c`-type wiring.
 
 ## Pins and Buses (Raspberry Pi)
 
@@ -90,10 +79,11 @@ Adjust as needed if your hat uses different pins.
 
 ## Hardware Targets
 
-Nerves builds depend on `MIX_TARGET`. If it is unset, the project runs on the host for fast cycles and utility tasks. See supported targets:
-[https://hexdocs.pm/nerves/supported-targets.html](https://hexdocs.pm/nerves/supported-targets.html)
+Nerves builds depend on `MIX_TARGET`. If it is unset, the project runs on the host for fast cycles and utility tasks. 
 
-Typical targets: `rpi3`, `rpi4`.
+Typical targets: `rpi3`, `rpi4`, `rpi5`.
+
+See the full list of [supported Nerves targets](https://hexdocs.pm/nerves/supported-targets.html).
 
 ## Configuration
 
