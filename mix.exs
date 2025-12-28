@@ -50,7 +50,6 @@ defmodule SampleApp.MixProject do
       {:circuits_gpio, "~> 2.0"},
       {:circuits_spi, "~> 2.0"},
       {:circuits_i2c, "~> 2.0"},
-      {:cvt_color, "~> 0.1.3"},
 
       # Allow Nerves.Runtime on host to support development, testing and CI.
       # See config/host.exs for usage.
@@ -58,6 +57,7 @@ defmodule SampleApp.MixProject do
 
       # Dependencies for all targets except :host
       {:nerves_pack, "~> 0.7.1", targets: @all_targets},
+      {:lcd_display, "~> 0.4", targets: @all_targets},
 
       # Dependencies for specific targets
       # NOTE: It's generally low risk and recommended to follow minor version
