@@ -26,8 +26,7 @@ defmodule SampleApp.MixProject do
       archives: [nerves_bootstrap: "~> 1.13"],
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      releases: [{@app, release()}],
-      preferred_cli_target: [run: :host, test: :host]
+      releases: [{@app, release()}]
     ]
   end
 
@@ -37,6 +36,10 @@ defmodule SampleApp.MixProject do
       extra_applications: [:logger, :runtime_tools],
       mod: {SampleApp.Application, []}
     ]
+  end
+
+  def cli do
+    [preferred_targets: [run: :host, test: :host]]
   end
 
   # Run "mix help deps" to learn about dependencies.
