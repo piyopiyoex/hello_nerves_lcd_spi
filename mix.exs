@@ -67,18 +67,20 @@ defmodule SampleApp.MixProject do
       # bumps to Nerves systems. Since these include Linux kernel and Erlang
       # version updates, please review their release notes in case
       # changes to your application are needed.
-      {:nerves_system_rpi, "~> 1.32", runtime: false, targets: :rpi},
-      {:nerves_system_rpi0, "~> 1.32", runtime: false, targets: :rpi0},
-      {:nerves_system_rpi2, "~> 1.32", runtime: false, targets: :rpi2},
-      {:nerves_system_rpi3, "~> 1.32", runtime: false, targets: :rpi3},
-      {:nerves_system_rpi3a, "~> 1.32", runtime: false, targets: :rpi3a},
-      {:nerves_system_rpi4, "~> 1.32", runtime: false, targets: :rpi4},
-      {:nerves_system_rpi5, "~> 0.7", runtime: false, targets: :rpi5},
-      {:nerves_system_bbb, "~> 2.28", runtime: false, targets: :bbb},
-      {:nerves_system_osd32mp1, "~> 0.23", runtime: false, targets: :osd32mp1},
-      {:nerves_system_x86_64, "~> 1.32", runtime: false, targets: :x86_64},
-      {:nerves_system_grisp2, "~> 0.16", runtime: false, targets: :grisp2},
-      {:nerves_system_mangopi_mq_pro, "~> 0.14", runtime: false, targets: :mangopi_mq_pro}
+      {:nerves_system_rpi, "~> 1.33", runtime: false, targets: :rpi},
+      {:nerves_system_rpi0, "~> 1.33", runtime: false, targets: :rpi0},
+      {:nerves_system_rpi0_2, "~> 1.33", runtime: false, targets: :rpi0_2},
+      {:nerves_system_rpi2, "~> 1.33", runtime: false, targets: :rpi2},
+      {:nerves_system_rpi3, "~> 1.33", runtime: false, targets: :rpi3},
+      {:nerves_system_rpi3a, "~> 1.33", runtime: false, targets: :rpi3a},
+      {:nerves_system_rpi4, "~> 1.33", runtime: false, targets: :rpi4},
+      {:nerves_system_rpi5, "~> 0.8", runtime: false, targets: :rpi5},
+      {:nerves_system_bbb, "~> 2.29", runtime: false, targets: :bbb},
+      {:nerves_system_osd32mp1, "~> 0.24", runtime: false, targets: :osd32mp1},
+      {:nerves_system_x86_64, "~> 1.33", runtime: false, targets: :x86_64},
+      {:nerves_system_npi_imx6ull, "~> 0.21", runtime: false, targets: :npi_imx6ull},
+      {:nerves_system_grisp2, "~> 0.17", runtime: false, targets: :grisp2},
+      {:nerves_system_mangopi_mq_pro, "~> 0.15", runtime: false, targets: :mangopi_mq_pro}
     ]
   end
 
